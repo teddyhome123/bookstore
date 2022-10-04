@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>購物車</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		//給清空購物車點擊事件
+		$("#emptyCart").click(function(){
+			//獲取超連結後的hidden
+			//var $inputHidden = $(this).next();
+			//var cartId = $inputHidden.val();
+			//alert(cartId);
+			return confirm("確定要清空購物車嗎?")
+		});
+		//給刪除購物項超連結綁定事件
+		$(".deleteCartItem").click(function(){
+			//獲取圖書名稱
+			var title = $(this).attr("id");
+			return confirm("確定要刪除[" +title+ "]嗎?");
+		});
+		//給更新購物項數量超連結綁定事件
+		$(".updatCountItem").click(function(){
+			//獲取當前購物項ID和數量
+			var cartItemId = $(this).attr("id");
+			//數量
+			var bookCount = $(this).val();
+
+			//發送請求
+			location = "/updatCountItem?cartItemId="+cartItemId+"&bookCount="+bookCount;
+
+		});
+	});
+</script>
+</head>
+<body>
+	
+	<div id="header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+			<span class="wel_word">購物車</span>
+			<div>
+				{{if .UserID}}
+					<div>
+						<span>歡迎<span class="um_span">{{.UserName}}</span>光臨線上書城</span>
+						<a href="/getCartInfo">購物車</a>
+						<a href="/getMyOrder">我的訂單</a>
+						<a href="/pages/manager/manager.html">後台管理</a>
+						<a href="/logout">登出</a>&nbsp;&nbsp;
+						<a href="/main">回首頁</a>
+					</div>
+				{{else}}
+					<div>
+						<a href="pages/user/login.html">登入</a> | 
+						<a href="pages/user/regist.html">註冊</a>&nbsp;&nbsp;
+						<a href="/getCartInfo">購物車</a>
+					</div>
+				{{end}}
+			</div>
+	</div>
+	
+	<div id="main">
+		{{if .Cart}}
+			<table>
+				<tr>
+					<td>商品名稱</td>
+					<td>數量</td>
+					<td>單價</td>
+					<td>金額</td>
+					<td>操作</td>
+				</tr>	
+			{{range .Cart.CartItems}}	
+				<tr>
+					<td>{{.Book.Title}}</td>
+					<td>
+						<input id="{{.CartItemID}}" class="updatCountItem" type="number" min="1" step="1" value="{{.Count}}" style="text-align: center; width: 50px;"/>
+					</td>
+					<td>{{.Book.Price}}</td>
+					<td>{{.Amount}}</td>
+					<td>	
+						<a id="{{.Book.Title}}" class="deleteCartItem" href="/deleteCartItem?cartItemId={{.CartItemID}}">刪除</a>
+					</td>
+				</tr>		
+			{{end}}	
+			</table>
+		
+			<div class="cart_info">
+				<span class="cart_span">購物車中有<span class="b_count">{{.Cart.TotalCount}}</span>件商品</span>
+				<span class="cart_span">總金額<span class="b_price">{{.Cart.TotalAmount}}</span>元</span>
+				<span class="cart_span"><a href="/main">繼續購物</a></span>
+				<span class="cart_span">
+					<a href="/deleteCart?cartId={{.Cart.CartID}}" id="emptyCart">清空購物車</a>
+					<!--<input type="hidden" value="{{.Cart.CartID}}" />-->
+				</span>
+				<span class="cart_span"><a href="/checkout">去結帳</a></span>
+			</div>
+		{{else}}
+			<h1 style="text-align: center; padding-top: 200px;">購物車沒有商品，這裡返回<a href="/main" style="color:red">首頁</a>購物</h1>
+		{{end}}
+	</div>
+	
+</body>
+</html>

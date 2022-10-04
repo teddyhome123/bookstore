@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的订单</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<style type="text/css">
+	h1 {
+		text-align: center;
+		margin-top: 200px;
+	}
+</style>
+</head>
+<body>
+	
+	<div id="header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+			<span class="wel_word">我的訂單</span>
+			<div>
+				<span>歡迎<span class="um_span">{{.UserName}}</span>光臨線上書城</span>
+				<a href="/getMyOrder">我的訂單</a>
+				<a href="/logout">登出</a>&nbsp;&nbsp;
+				<a href="/main">回首頁</a>
+			</div>
+	</div>
+	
+	<div id="main">
+		<table>
+			<tr>
+				<th>訂單號</th>
+				<th>日期</th>
+				<th>數量</th>
+				<th>金額</th>
+				<th>訂單詳情</th>
+				<th>物流狀態</th>
+			</tr>		
+		{{range .Orders}}
+			<tr>
+				<td>{{.OrderID}}</td>
+				<td>{{.CreateTime}}</td>
+				<td>{{.TotalCount}}</td>
+				<td>{{.TotalAmount}}</td>
+				<td><a href="/getOrderInfo?orderid={{.OrderID}}">查看詳情</a></td>
+				<td class="state">
+					{{if .SendComplate}}
+						<a href="/takeOrder?orderId={{.OrderID}}">確認收貨</a>
+					{{end}}	
+					{{if .NoSend}}
+						等待發貨
+					{{end}}		
+					{{if .Complate}}
+						交易完成
+					{{end}}					
+				</td>
+			</tr>
+		{{end}}		
+		</table>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>訂單詳情</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+</head>
+<body>
+	<div id="header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+			<span class="wel_word">訂單詳情</span>
+			<div>
+				<a href="/getPageBooks">圖書管理</a>
+				<a href="/getOrders">訂單管理</a>
+				<a href="/main">返回商城</a>
+			</div>
+	</div>
+	
+	<div id="main">
+		<table>
+			<tr>
+				<th>封面</th>
+				<th>書名</th>
+				<th>作者</th>
+				<th>價格</th>
+				<th>數量</th>
+				<th>金額</th>
+			</tr>		
+		{{range .}}
+			<tr>
+				<td>
+					<img class="book_img" src="{{.ImgPath}}" />
+				</td>
+				<td>{{.Title}}</td>
+				<td>{{.Author}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Count}}</td>
+				<td>{{.Amount}}</td>
+			</tr>
+		{{end}}		
+		</table>
+	</div>
+	
+</body>
+</html>

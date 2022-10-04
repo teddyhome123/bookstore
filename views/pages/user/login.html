@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>會員登入頁面</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<!--引入jquery.js文件 -->
+<script type="text/javascript" src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	//相当于window.onlaod = function(){};
+	$(function(){
+		//給登入綁定按鈕
+		$("#sub_btn").click(function(){
+			//获取用户输入的用户名
+			/*
+				val()：用来获取或设置input中的value属性值
+				对象.val()：获取value属性值
+				对象.val("new Value")：设置value属性值
+			*/
+			var username = $("#username").val();
+			//判斷用戶是否為空
+			if(username == ""){
+				alert("用戶名不可以為空！");
+				//取消
+				return false;
+			}
+			//獲取密碼
+			var password = $("#password").val();
+			if(password == ""){
+				alert("密碼不可以為空！");
+				return false;
+			}
+		});
+
+		//切換span標籤中的內容
+		if("{{.}}" == "用戶名或密碼錯誤") {
+			//設定span標籤中的值
+			$("#msg").text("用戶名或密碼錯誤")
+		}
+
+
+
+	});
+</script>
+</head>
+<body>
+		<div id="login_header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+		</div>
+		
+			<div class="login_banner">
+			
+				<div id="l_content">
+					<span class="login_word">歡迎登入</span>
+				</div>
+				
+				<div id="content">
+					<div class="login_form">
+						<div class="login_box">
+							<div class="tit">
+								<h1>會員</h1>
+								<a href="/regist">立即註冊</a>
+							</div>
+							<div class="msg_cont">
+								<b></b>
+								<span class="errorMsg" id="msg">請輸入用戶名稱與密碼</span>
+							</div>
+							<div class="form">
+								<form action="/login" method="POST">
+									<label>用戶名稱：</label>
+									<input class="itxt" type="text" placeholder="請輸入用戶名" autocomplete="off" tabindex="1" name="username" id="username"/>
+									<br />
+									<br />
+									<label>用戶密碼：</label>
+									<input class="itxt" type="password" placeholder="請輸入密碼" autocomplete="off" tabindex="1" name="password" id="password"/>
+									<br />
+									<br />
+									<br />
+									<input type="submit" value="登入" id="sub_btn" />
+								</form>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+</body>
+</html>

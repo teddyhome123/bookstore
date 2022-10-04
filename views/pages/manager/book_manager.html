@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>圖書管理</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script type="text/javascript" src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function() {
+		//給刪除圖書提示框
+		$(".deleteBook").click(function(){
+			//獲取書名
+			var title = $(this).attr("id");
+			//var flag = confirm("確定刪除["+title+"]嗎?")
+			//if(!flag){
+				//取消
+			//}
+			return confirm("確定刪除["+title+"]嗎?")
+		});
+	});
+	//alert($);
+</script>
+
+</head>
+<body>
+	
+	<div id="header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+			<span class="wel_word">圖書管理系统</span>
+			<div>
+				<a href="/getPageBooks">圖書管理</a>
+				<a href="/getOrders">訂單管理</a>
+				<a href="/main">返回商城</a>
+			</div>
+	</div>
+	
+	<div id="main">
+		<table>
+			<tr>
+				<td>名稱</td>
+				<td>價格</td>
+				<td>作者</td>
+				<td>銷售量</td>
+				<td>庫存</td>
+				<td colspan="2">操作</td>
+			</tr>		
+			
+		{{range .Books}}
+			<tr>
+				<td>{{.Title}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Author}}</td>	
+				<td>{{.Sales}}</td>
+				<td>{{.Stock}}</td>
+				<td><a href="/toUpdataBook?bookID={{.ID}}">修改</a></td>
+				<td><a id="{{.Title}}" class="deleteBook" href="/deleteBook?bookID={{.ID}}">刪除</a></td>
+			</tr>	
+		{{end}}
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><a href="/toUpdataBook">添加圖書</a></td>
+			</tr>	
+		</table>
+		<div id="page_nav">
+			{{if .IsHasPrev}}
+				<a href="/getPageBooks?pageNo=1">首頁</a>
+				<a href="/getPageBooks?pageNo={{.GetPrevPageNo}}">上一頁</a>
+			{{end}}
+			當前是 第 {{.PageNo}} 頁, 共 {{.TotalPageNo}} 頁，共 {{.TotalRecrd}} 筆
+			{{if .IsHasNext}}
+				<a href="/getPageBooks?pageNo={{.GetNextPageNo}}">下一頁</a>
+				<a href="/getPageBooks?pageNo={{.TotalPageNo}}">末頁</a>
+			{{end}}
+			到第<input value="" name="pn" id="pn_input"/>頁
+			<input type="button" value="確定" id="sub">
+			<script>
+				//給確定按鈕單擊事件
+				$("#sub").click(function(){
+					//獲取輸入的頁碼
+					var pageNo = $("#pn_input").val();
+					location = "getPageBooks?pageNo=" + pageNo
+				});
+			</script>
+		</div>
+	</div>
+	
+</body>
+</html>

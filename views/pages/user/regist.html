@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>會員註冊頁面</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<style type="text/css">
+	.login_form{
+		height:420px;
+		margin-top: 25px;
+	}
+	
+</style>
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		//給註冊綁定按鈕
+		$("#sub_btn").click(function(){
+			//獲取用戶名
+			var username = $("#username").val();
+			//驗證用戶名
+			var usernameReg = /^[a-zA-Z0-9_-]{3,16}$/;
+			var flag = usernameReg.test(username);
+			if(!flag){
+				alert("請輸入3-16位的字母、數字、下滑線或減號的用户名！");
+				return false;
+			}
+			//獲取用戶密碼
+			var password = $("#password").val();
+			//驗證密碼
+			var passwordReg = /^[a-zA-Z0-9_-]{6,18}$/;
+			if(!passwordReg.test(password)){
+				alert("請輸入6-18位的字母、數字、下滑線或減號的密碼！")
+				return false;
+			}
+			//確認密碼
+			var repwd = $("#repwd").val();
+			if(repwd == ""){
+				alert("確認密碼不可為空！");
+				return false;
+			}
+			//判斷確認密碼
+			if(repwd != password){
+				//判斷確認密碼
+				$("#repwd").val("");
+				alert("兩次輸入不同！");
+				return false;
+			}
+			//獲取email
+			var email = $("#email").val();
+			var emailReg = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+			if(!emailReg.test(email)){
+				alert("電子郵件格式錯誤！");
+				return false;
+			}
+			
+		});
+
+		//隱藏msg
+		$("#msg").hide();
+		if("{{.}}"=="用戶名已存在"){
+			$("#msg").show();
+		}	
+
+		//發送Ajax請求驗證用戶是否存在
+		$("#username").change(function(){
+			//換取用戶輸入的用戶名
+			var username = $(this).val();
+			//設置請求URL
+			var url = "/checkUserName"
+			//設置請求參數
+			var param = {"username" : username};
+			//發送AJAX請求
+			$.post(url, param, function(res){
+				//將顯示提示訊息的span顯示
+				$("#msg").show();
+				//將響應設置到span裡
+				$("#msg").html(res);
+			});
+
+		});
+	});
+
+</script>
+</head>
+<body>
+		<div id="login_header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+		</div>
+		
+			<div class="login_banner">
+			
+				<div id="l_content">
+					<span class="login_word">歡迎註冊</span>
+				</div>
+				
+				<div id="content">
+					<div class="login_form">
+						<div class="login_box">
+							<div class="tit">
+								<h1>註冊會員</h1>
+								<span class="errorMsg" id="msg">{{.}}</span>
+							</div>
+							<br>
+							<div class="form">
+								<form action="/regist" method="POST">
+									<label>用戶名稱：</label>
+									<input class="itxt" type="text" placeholder="請輸入用戶名稱" autocomplete="off" tabindex="1" name="username" id="username" />
+									<br />
+									<br />
+									<label>用户密碼：</label>
+									<input class="itxt" type="password" placeholder="請輸入密碼" autocomplete="off" tabindex="1" name="password" id="password" />
+									<br />
+									<br />
+									<label>確認密碼：</label>
+									<input class="itxt" type="password" placeholder="確認密碼" autocomplete="off" tabindex="1" name="repwd" id="repwd" />
+									<br />
+									<br />
+									<label>電子郵件：</label>
+									<input class="itxt" type="text" placeholder="請輸入電子郵件" autocomplete="off" tabindex="1" name="email" id="email" />
+									<br />
+									<br />
+									<br />
+									<input type="submit" value="註冊" id="sub_btn" />
+								</form>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+</body>
+</html>

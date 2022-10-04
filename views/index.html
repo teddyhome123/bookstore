@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>書城首頁</title>
+<link type="text/css" rel="stylesheet" href="static/css/style.css" >
+<script type="text/javascript" src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		//給加入購物車按鈕添加點擊動作
+		$(".addBookCart").click(function(){
+			//獲取添加圖書的ID
+			var bookId = $(this).attr("id");
+			//請求URL
+			var url = "/addBookCart"
+			//設置請求參數
+			var param = {"bookId" : bookId}
+			//發送AJAX請求
+			$.post(url, param, function(res){
+				if(res == "請先登入") {
+					location = "/pages/user/login.html";
+				} else {
+					//將響應訊息設定到span
+					$("#bookMes").text(res);
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	
+	<div id="header">
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
+			<span class="wel_word">網路書城</span>
+			{{if .IsLogin}}
+				<div>
+					<span>歡迎<span class="um_span">{{.Username}}</span>光臨線上書城</span>
+					<a href="/getCartInfo">購物車</a>
+					<a href="/getMyOrder">我的訂單</a>
+					<a href="/pages/manager/manager.html" style="color: red;">後台管理</a>
+					<a href="/logout">登出</a>&nbsp;&nbsp;
+					<a href="/main">回首頁</a>
+				</div>
+			{{else}}
+				<div>
+					<a href="pages/user/login.html">登入</a> | 
+					<a href="pages/user/regist.html">註冊</a>&nbsp;&nbsp;
+					<a href="pages/user/login.html">購物車</a>
+				</div>
+			{{end}}
+	</div>
+	
+	<div id="main">
+		<div id="book">
+			<div class="book_cond">
+				<form action="/getPageBooksByPrice" method="POST">
+					價格：<input type="text" name="min"> 元 - 
+					<input type="text" name="max"> 元 <button>查詢</button>
+				</form>
+			</div>
+			<div style="text-align: center">
+				<div>
+					<span style="color: red" id="bookMes"></span>
+				</div>
+			</div>
+
+			
+			{{range .Books}}
+				<div class="b_list">
+					<div class="img_div">
+						<img class="book_img" alt="" src="{{.ImgPath}}" />
+					</div>
+					<div class="book_info">
+						<div class="book_name">
+							<span class="sp1">書名:</span>
+							<span class="sp2">{{.Title}}</span>
+						</div>
+						<div class="book_author">
+							<span class="sp1">作者:</span>
+							<span class="sp2">{{.Author}}</span>
+						</div>
+						<div class="book_price">
+							<span class="sp1">價格:</span>
+							<span class="sp2">{{.Price}}</span>
+						</div>
+						<div class="book_sales">
+							<span class="sp1">銷售量:</span>
+							<span class="sp2">{{.Sales}}</span>
+						</div>
+						<div class="book_amount">
+							<span class="sp1">庫存:</span>
+							<span class="sp2">{{.Stock}}</span>
+						</div>
+						<div class="book_add">
+							{{if .Stock}}
+								<button id="{{.ID}}" class="addBookCart">加入購物車</button>
+								<!--<input type="hidden" name="bookId" value="{{.ID}}" />-->
+							{{else}}
+								<span style="color: red;">沒有庫存</span>
+							{{end}}
+						</div>
+					</div>
+				</div>
+			{{end}}
+		</div>
+		
+		<div id="page_nav">
+			{{if .IsHasPrev}}
+				<a href="/getPageBooksByPrice?min={{.MinPrice}}&max={{.MaxPrice}}&pageNo=1">首頁</a>
+				<a href="/getPageBooksByPrice?pageNo={{.GetPrevPageNo}}">上一頁</a>
+			{{end}}
+			當前是 第 {{.PageNo}} 頁, 共 {{.TotalPageNo}} 頁，共 {{.TotalRecrd}} 筆
+			{{if .IsHasNext}}
+				<a href="/getPageBooksByPrice?min={{.MinPrice}}&max={{.MaxPrice}}&pageNo={{.GetNextPageNo}}">下一頁</a>
+				<a href="/getPageBooksByPrice?min={{.MinPrice}}&max={{.MaxPrice}}&pageNo={{.TotalPageNo}}">末頁</a>
+			{{end}}
+			到第<input value="" name="pn" id="pn_input"/>頁
+			<input type="button" value="確定" id="sub">
+			<script>
+				//給確定按鈕單擊事件
+				$("#sub").click(function(){
+					//獲取輸入的頁碼
+					var pageNo = $("#pn_input").val();
+					location = "getPageBooksByPrice?pageNo=" + pageNo +"&min={{.MinPrice}}&max={{.MaxPrice}}"
+				});
+			</script>
+		</div>
+	
+	</div>
+	
+</body>
+</html>
