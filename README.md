@@ -1,6 +1,11 @@
 # bookstore
 這是練習WEB CRUD操作之作品集
 
+架構圖
+![架構](https://user-images.githubusercontent.com/89484381/194005979-034fbfa4-135f-4b6b-a589-eede423d23d3.jpg)
+
+
+
 1.首頁
 ![index](https://user-images.githubusercontent.com/89484381/193999923-f1bab914-610d-48ef-89ef-e22212630477.jpg)
 
